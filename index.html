@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/output.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/app.js"></script>
+
+    <title>Cat Trivia Game</title>
+</head>
+
+<body class="h-full bg-purple-900">
+
+    <div class="flex py-8 px-4 items-center justify-center">
+        <div class="flex flex-col bg-purple-200 w-full rounded shadow-lg max-w-4xl">
+
+            <div class="w-full h-64 bg-top bg-cover rounded" style="background-image: url(assets/images/emandyu.jpg)"></div>
+
+            <div class="flex w-full md:flex-row justify-center">
+                <div class="flex flex-col p-4 font-normal text-purple-800">
+                    <h1 class="text-4xl font-bold text-purple-800">Cat Trivia</h1>
+                </div>
+            </div>
+
+
+            <button class="w-full bg-purple-500 hover:bg-purple-400 text-white font-bold py-2 px-4 border-b-4 border-purple-700 hover:border-purple-500 rounded mb-4" id="start"> Start </button> 
+
+            <div class="w-full bg-purple-700 text-white text-2xl text-center" id="timer">
+                <div id="sec"></div>
+            </div>
+
+            <div class="w-full text-purple-800 text-2xl p-8 text-center" id="howto">
+                You have 5 questions to answer! You have 5 seconds for each one. Are you ready? Click start!
+            </div>
+
+            <div id="triviaAll" class="flex mt-2"> </div>
+
+            <div class="w-full text-purple-800 text-xl p-2 text-center" id="correctAns"></div>
+            <div class="w-full text-purple-800 text-xl p-2 text-center" id="incorrectAns"></div>
+            <div class="w-full text-purple-800 text-xl p-2 text-center" id="unanswered"></div>
+            <div class="w-full text-purple-800 text-xl p-2 text-center" id="onTime"></div>
+            <div class="w-full text-purple-800 text-2xl p-5 text-center" id="outOfTime"></div>
+            <div class="w-full text-purple-800 text-xl p-2 text-center" id="results">Lets see how you did...</div>
+
+            
+            <div class="flex justify-center mb-5">
+                <button class="max-w-xs bg-purple-500 hover:bg-purple-400 text-white font-bold py-2 px-4 border-b-4 border-purple-700 hover:border-purple-500 rounded" id="done"> Done </button>
+            </div> 
+
+            <div class="flex justify-center mb-5">
+                <button class="max-w-xs bg-purple-500 hover:bg-purple-400 text-white font-bold py-2 px-6 border-b-4 border-purple-700 hover:border-purple-500 rounded" id="reset"> Reset </button>
+            </div> 
+
+        </div>
+    </div>
+
+</body>
+
+</html>
