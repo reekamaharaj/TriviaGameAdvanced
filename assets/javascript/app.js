@@ -9,9 +9,7 @@ const triviaQuestion = [
             c: 230, 
             d: 186
         },
-        correct: function() {
-            return this.answer.c;
-        }
+        correct: "c"
     },
 
     {
@@ -22,9 +20,7 @@ const triviaQuestion = [
             c: "Siamese", 
             d: "Persian"
         },
-        correct: function() {
-            return this.answer.c;
-        }
+        correct: "c"
     },
 
 
@@ -35,9 +31,7 @@ const triviaQuestion = [
             b: 7,
             c: 2,
             d: 6},
-        correct: function () {
-            return this.answer.a;
-        }
+        correct: "a"
     },
 
     {
@@ -47,9 +41,7 @@ const triviaQuestion = [
             b: 30,
             c: 36,
             d: 22},
-        correct: function() {
-            return this.answer.b;
-        }
+        correct: "b"
     },
 
     {
@@ -59,9 +51,7 @@ const triviaQuestion = [
             b: "Belgian Mist",
             c: "Australian Mist",
             d: "American Mist"},
-        correct: function() {
-            return this.answer.c;
-        }
+        correct: "c"
     },
 
     {
@@ -71,9 +61,7 @@ const triviaQuestion = [
             b: "Havana Brown",
             c: "Russian blue",
             d: "Himalayan"},
-        correct: function(){
-            return this.answer.d;
-        }
+        correct: "d"
     },
     
     {
@@ -83,9 +71,7 @@ const triviaQuestion = [
             b: "Manx",
             c: "Munchkin",
             d: "Napoleon"},
-        correct: function(){
-            return this.answer.c;
-        }
+        correct: "c"
     },
 
     {
@@ -95,9 +81,7 @@ const triviaQuestion = [
             b: "Nebelung",
             c: "Tiffany",
             d: "Snowshoe"},
-        correct: function(){
-            return this.answer.a;
-        }
+        correct: "a"
     },
 
     {
@@ -107,9 +91,7 @@ const triviaQuestion = [
             b: "La Perm",
             c: "Persian",
             d: "Abyssinian"},
-        correct: function(){
-            return this.answer.d;
-        }
+        correct: "d"
     },
 
     {
@@ -119,9 +101,7 @@ const triviaQuestion = [
             b: "Maine Coon",
             c: "Ragdoll",
             d: "Siberian"},
-        correct: function(){
-            return this.answer.b;
-        }
+        correct: "b"
     },
     
     {
@@ -131,9 +111,7 @@ const triviaQuestion = [
             b: "Two months",
             c: "1-3 weeks",
             d: "At birth"},
-        correct: function(){
-            return this.answer.c;
-        }
+        correct: "c"
     },
     
     {
@@ -143,9 +121,7 @@ const triviaQuestion = [
             b: "At birth",
             c: "2 weeks",
             d: "6 weeks"},
-        correct: function(){
-            return this.answer.d;
-        }
+        correct: "d"
     },
 
     {
@@ -155,9 +131,7 @@ const triviaQuestion = [
             b: "A barn cat",
             c: "Cats that roam only at night",
             d: "Cats that roam freely"},
-        correct: function(){
-            return this.answer.a;
-        }
+        correct: "a"
     },
 
     {
@@ -167,9 +141,7 @@ const triviaQuestion = [
             b: "Paws",
             c: "Tubbs",
             d: "Marmalade"},
-        correct: function (){
-            return this.answer.a;
-        }
+        correct: "a"
     },
 
     {
@@ -179,9 +151,7 @@ const triviaQuestion = [
             b: "12 Hours",
             c: "4 Hours",
             d: "16 Hours"},
-        correct: function(){
-            return this.answer.d;
-        }
+        correct: "d"
     }
 ];
 
@@ -191,7 +161,7 @@ let answerA;
 let answerB;
 let answerC;
 let answerD;
-let correctQAns = "";
+let correctQAns;
 
 let correct = 0;
 let incorrect =0;
@@ -201,7 +171,7 @@ let randArr = [ ];
 let randArrIndex = 0;
 
 let timerRunning = false;
-let time = 0;
+let time;
 let intervalId;
 
 //document load
@@ -222,11 +192,11 @@ $('document').ready(function(){
 
 //start 
 function start(){
-    time = 5;
-    randQ();
+    time = 10;
     timerStart();
     decrement();
-
+    randQ();
+    
     $("#timer").show();
     $("#triviaAll").show();
     $("#start").hide();
@@ -246,19 +216,20 @@ function randQ(){
         unanswered++;
 
     }
+    console.log(randArr);
     newQ();
     }
 
 function newQ(){
 
-    if (randArrIndex < 5){
+    if (randArrIndex <= 5){
+        time = 10;
         $(".questionContainer").remove();
         $("#correctAns").hide();
         $("#incorrectAns").hide();
         $("#unanswered").hide();
         $("#triviaAll").show();
         displayQ();
-        randArrIndex++;
     }
     else {
         endTrivia();
@@ -278,21 +249,20 @@ function displayQ(){
     
     questionContainer = $('<div class="questionContainer flex">');
 
-    question = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800 w-full" id="question">' + '<span class="ml-2 px-4 py-2 text-orange-800">' + randArr[randArrIndex].question + '</span>' + '</label>';
+    question = '<label class="inline-flex items-center px-4 py-2 font-bold text-purple-800 w-full" id="question"> <span class="ml-2 px-4 py-2 text-purple-800">' + randArr[randArrIndex].question + '</span> </label>';
 
-    answerA = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800 w-1/4" id="answerA">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="a" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800">' + randArr[randArrIndex].answer.a + '</span>' + '</label>';
+    answerA = '<label class="inline-flex items-center px-4 py-2 font-bold text-purple-800 w-1/4" id="answerA"> <input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="a" onClick="clicked(this.value, this.className)"> </input> <span class="ml-2 px-4 py-2 text-purple-800">' + randArr[randArrIndex].answer.a + '</span> </label>';
 
-    answerB = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800 w-1/4" id="answerB">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="b" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[randArrIndex].answer.b + '</span>' + '</label>';
+    answerB = '<label class="inline-flex items-center px-4 py-2 font-bold text-purple-800 w-1/4" id="answerB"> <input type="radio" class=" ' +  randArrIndex + '" name="answer' + randArrIndex + '" value="b" onClick="clicked(this.value, this.className)"> </input> <span class="ml-2 px-4 py-2 text-purple-800 ">' + randArr[randArrIndex].answer.b + '</span> </label>';
 
-    answerC = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800" id="answerC w-1/4">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="c" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[randArrIndex].answer.c + '</span>' + '</label>';
+    answerC = '<label class="inline-flex items-center px-4 py-2 font-bold text-purple-800 w-1/4" id="answerC"> <input type="radio" class=" ' + randArrIndex + '" name="answer' + randArrIndex + '" value="c" onClick="clicked(this.value, this.className)"> </input> <span class="ml-2 px-4 py-2 text-purple-800 ">' + randArr[randArrIndex].answer.c + '</span> </label>';
 
-    answerD = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800 w-1/4" id="answerD">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="d" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[randArrIndex].answer.d + '</span>' + '</label>';
+    answerD = '<label class="inline-flex items-center px-4 py-2 font-bold text-purple-800 w-1/4" id="answerD"> <input type="radio" class= "' + randArrIndex + '" name="answer' + randArrIndex + '" value="d" onClick="clicked(this.value, this.className)"> </input> <span class="ml-2 px-4 py-2 text-purple-800 ">' + randArr[randArrIndex].answer.d + '</span> </label>';
 
     questionContainer.append(question, answerA, answerB, answerC, answerD);
-    correctQAns = randArr[randArrIndex].correct();
+    correctQAns = randArr[randArrIndex].correct;
     $("#triviaAll").append(questionContainer);
 }
-
 
 //start timer
 function timerStart(){
@@ -305,13 +275,24 @@ function timerStart(){
 
 //timer decrement
 function decrement(){
-    $("#sec").text(time);
     time--;
+    $("#sec").text(time);
     if (time === 0) {
         clearInterval(intervalId);
         timerRunning = false;
-        results();
+        outOfTime();
     }
+}
+
+function outOfTime(){
+    time=5;
+    clearInterval(intervalId);
+    timerRunning = false;
+    timerStart();
+    decrement
+        $("#triviaAll").hide();
+        $("#outOfTime").show().text("Whoops you ran out of time! The answer to that question is " + correctQAns);
+        nextQ();
 }
 
 //game over
@@ -324,11 +305,6 @@ function endTrivia(){
     $("#incorrectAns").show().text("Incorrect: " + incorrect);
     unanswered = randArr.length - (correct + incorrect);
     $("#unanswered").show().text("Unanswered: " + unanswered);
-
-    results();
-    clearInterval(intervalId);
-    timerRunning = false;
-    time = 5;
 }
 
 //what happens onClick of radio btn
@@ -343,41 +319,57 @@ function clicked(currentAns, qIndex){
 
     answers[qIndexInt] = currentAnsObj;
     answerArray = Object.values(answers);
-    }
+    results();
+}
 
 // results
 function results(){
-        if (randArrIndex != 5){
-            if (answerArray.correctAns === answerArray.radioAns){
-                time=3;
+    if (randArrIndex != 5){
+
+        for (i=0; i < answerArray.length; i++){
+            if (answerArray[i].correctAns === answerArray[i].radioAns){
+                $("#triviaAll").hide();
+                clearInterval(intervalId);
+                timerRunning = false;
+                time = 5;
                 correct ++;
                 unanswered--;
-                timerStart();
-                $("#triviaAll").hide();
+                randArrIndex++;
                 $("#correctAns").show().text("You got it right!!");
-                newQ();
-                }
-            else if (answerArray.radioAns === undefined){
-                time=3;
                 timerStart();
+                decrement();
+                newQ();
+            }
+            else if (answerArray[i].radioAns === undefined){
                 $("#triviaAll").hide();
+                clearInterval(intervalId);
+                timerRunning = false;
+                time = 5;
+                randArrIndex++;
                 $("#outOfTime").show().text("Eep thats wrong! The answer to that question is " + correctQAns);
+                timerStart();
+                decrement();
                 newQ();
             }
             else {
-                time=3;
+                $("#triviaAll").hide();
+                clearInterval(intervalId);
+                timerRunning = false;
+                time = 5;
                 incorrect ++;
                 unanswered--;
-                timerStart();
-                $("#triviaAll").hide();
+                randArrIndex++;
                 $("#unanswered").show().text("Whoops you ran out of time! The answer to that question is " + correctQAns);
+                timerStart();
                 newQ();
             }
         }
-        else {
-            endTrivia();
-        }
     }
+    else {
+        endTrivia();
+    }
+}
+    
 
 // reset
 function reset(){
@@ -400,8 +392,8 @@ function reset(){
     randArr = [ ];
     randArrIndex = 0;
 
-    intervalId = 0;
-    time = 0;
+    clearInterval(intervalId);
+    timerRunning = false;
 
     start();
 }
