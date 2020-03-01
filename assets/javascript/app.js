@@ -185,37 +185,35 @@ const triviaQuestion = [
     }
 ];
 
+let questionContainer;
 let question;
 let answerA;
 let answerB;
 let answerC;
 let answerD;
-let correctQAns;
+let correctQAns = "";
 
 let correct = 0;
 let incorrect =0;
 let unanswered = 0;
 let answers = { };
-var randArr = [ ];
-var randArrIndex = 0;
+let randArr = [ ];
+let randArrIndex = 0;
 
 let timerRunning = false;
 let time = 0;
+let intervalId;
 
 //document load
 $('document').ready(function(){
     $("#start").click(start);
-    $("#done").click(done);
     $("#reset").click(reset);
 
     $("#timer").hide();
     $("#correctAns").hide();
     $("#incorrectAns").hide();
     $("#unanswered").hide();
-    $("#onTime").hide();
-    $("#outOfTime").hide();
     $("#results").hide();
-    $("#done").hide();
     $("#reset").hide();
 });
 
@@ -224,63 +222,82 @@ $('document').ready(function(){
 
 //start 
 function start(){
+    time = 5;
     randQ();
+    timerStart();
+    decrement();
 
     $("#timer").show();
     $("#triviaAll").show();
-    $("#done").show();
     $("#start").hide();
     $("#howto").hide();
 }
 
 //Random Questions
 function randQ(){
-    for (i=0; i < 5; i++){
-        var random = triviaQuestion[Math.floor(Math.random()*15)];
-        randArr.push(random);
+    for (let i = triviaQuestion.length -1; i > 0; i--){
+        const j = Math.floor(Math.random()*i);
+        const temp = triviaQuestion[i];
+        triviaQuestion[i] = triviaQuestion[j];
+        triviaQuestion[j] = temp;
+    }
+    for (let i=0; i < 5; i++){
+        randArr.push(triviaQuestion[i]);
         unanswered++;
-    }    
+
+    }
     newQ();
+    }
+
+function newQ(){
+
+    if (randArrIndex < 5){
+        $(".questionContainer").remove();
+        $("#correctAns").hide();
+        $("#incorrectAns").hide();
+        $("#unanswered").hide();
+        $("#triviaAll").show();
+        displayQ();
+        randArrIndex++;
+    }
+    else {
+        endTrivia();
+    }
 }
 
 //Populates question and displays on page
 function displayQ(){
+
+    questionContainer = undefined;
     question = undefined;
     answerA = undefined;
     answerB = undefined;
     answerC = undefined;
     answerD = undefined;
     correctQAns = undefined;
-    time = 6;
+    
+    questionContainer = $('<div class="questionContainer flex">');
 
-    question = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800" id="question">' + '<span class="ml-2 px-4 py-2 text-orange-800">' + randArr[randArrIndex].question + '</span>' + '</label>';
+    question = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800 w-full" id="question">' + '<span class="ml-2 px-4 py-2 text-orange-800">' + randArr[randArrIndex].question + '</span>' + '</label>';
 
-    answerA = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800" id="answerA">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="a" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800">' + randArr[randArrIndex].answer.a + '</span>' + '</label>';
+    answerA = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800 w-1/4" id="answerA">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="a" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800">' + randArr[randArrIndex].answer.a + '</span>' + '</label>';
 
-    answerB = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800" id="answerB">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="b" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[randArrIndex].answer.b + '</span>' + '</label>';
+    answerB = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800 w-1/4" id="answerB">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="b" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[randArrIndex].answer.b + '</span>' + '</label>';
 
-    answerC = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800"id="answerC">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="c" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[i].answer.c + '</span>' + '</label>';
+    answerC = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800" id="answerC w-1/4">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="c" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[randArrIndex].answer.c + '</span>' + '</label>';
 
-    answerD = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800" id="answerD">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="d" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[i].answer.d + '</span>' + '</label>';
+    answerD = '<label class="inline-flex items-center px-4 py-2 font-bold text-orange-800 w-1/4" id="answerD">' + '<input type="radio" class="' + randArrIndex + '" name="answer' + randArrIndex + '" value="d" onClick="clicked(this.value, this.className)">' + '</input>' + '<span class="ml-2 px-4 py-2 text-orange-800 ">' + randArr[randArrIndex].answer.d + '</span>' + '</label>';
 
+    questionContainer.append(question, answerA, answerB, answerC, answerD);
     correctQAns = randArr[randArrIndex].correct();
-
-    $("#triviaAll").append(question, answerA, answerB, answerC, answerD);
+    $("#triviaAll").append(questionContainer);
 }
 
-function newQ(){
-
-    if (randArrIndex < 5){
-        displayQ();
-        timerStart();
-        randArrIndex++;
-        
-    }    
-}
 
 //start timer
 function timerStart(){
     if (!timerRunning) {
+        $("#timer").show();
         intervalId = setInterval(decrement, 1000);
         timerRunning = true;
     }
@@ -288,37 +305,21 @@ function timerStart(){
 
 //timer decrement
 function decrement(){
-    time--;
     $("#sec").text(time);
+    time--;
     if (time === 0) {
-        //show ran out of time page
-        //displays the answer, waits 2 seconds and then goes to next question
-        time=3;
-        timerStart();
-        $("#triviaAll").hide();
-        $("#outOfTime").show().text("Whoops you ran out of time! The answer to that question is " + correctQAns);
-        nextQ();
+        clearInterval(intervalId);
+        timerRunning = false;
+        results();
     }
-}
-
-//reset timer
-function resetTimer(){
-    clearInterval(intervalId);
-    timerRunning = false;
-    time = 0;
 }
 
 //game over
 function endTrivia(){
-    $("#done").hide();
     $("#timer").hide();
     $("#triviaAll").hide();
-
     $("#reset").show();
-    $("#outOfTime").show();
-    
-    $("label").remove();
-
+    $(".questionContainer").remove();
     $("#correctAns").show().text("Correct: " + correct);
     $("#incorrectAns").show().text("Incorrect: " + incorrect);
     unanswered = randArr.length - (correct + incorrect);
@@ -327,7 +328,7 @@ function endTrivia(){
     results();
     clearInterval(intervalId);
     timerRunning = false;
-    time = 0;
+    time = 5;
 }
 
 //what happens onClick of radio btn
@@ -344,38 +345,44 @@ function clicked(currentAns, qIndex){
     answerArray = Object.values(answers);
     }
 
-function done(){
-    newQ();
-    // if question was answered correct -> correct page
-    // if question was answered incorectly -> incorrect page
-    // if question was not answered -> show answer
-    // if there are no more questions -> endTrivia()
-}
-    
 // results
 function results(){
-    for (i=0; i < answerArray.length; i++){
-        if (answerArray[i].correctAns === answerArray[i].radioAns){
-            correct ++;
-            unanswered--;
+        if (randArrIndex != 5){
+            if (answerArray.correctAns === answerArray.radioAns){
+                time=3;
+                correct ++;
+                unanswered--;
+                timerStart();
+                $("#triviaAll").hide();
+                $("#correctAns").show().text("You got it right!!");
+                newQ();
+                }
+            else if (answerArray.radioAns === undefined){
+                time=3;
+                timerStart();
+                $("#triviaAll").hide();
+                $("#outOfTime").show().text("Eep thats wrong! The answer to that question is " + correctQAns);
+                newQ();
+            }
+            else {
+                time=3;
+                incorrect ++;
+                unanswered--;
+                timerStart();
+                $("#triviaAll").hide();
+                $("#unanswered").show().text("Whoops you ran out of time! The answer to that question is " + correctQAns);
+                newQ();
+            }
         }
         else {
-            incorrect ++;
-            unanswered--;
+            endTrivia();
         }
     }
-
-    $("#correctAns").text("Correct Answers: " + correct);
-    $("#incorrectAns").text("Incorrect Answers: " + incorrect);
-    $("#unanswered").text("Unanswered Questions: " + unanswered);
-
-}
 
 // reset
 function reset(){
     $("#timer").show();
     $("#triviaAll").show();
-    $("#done").show();
 
     $("#start").hide();
     $("#howTo").hide();
@@ -384,7 +391,6 @@ function reset(){
     $("#unanswered").hide();
     $("#onTime").hide();
     $("#outOfTime").hide();
-    $("#done").hide();
     $("#reset").hide();
 
     correct = 0;
@@ -395,7 +401,6 @@ function reset(){
     randArrIndex = 0;
 
     intervalId = 0;
-    timerRunning = false;
     time = 0;
 
     start();
@@ -422,7 +427,6 @@ function reset(){
 //
 //----Buttons
 // Start - done
-// Done - done
 // Reset - done
 
 //----Load page
