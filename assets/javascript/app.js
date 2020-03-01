@@ -211,7 +211,7 @@ reset -> reset button
 // document load only show instructions and start button hide all other ids
 $("document").ready(function(){
     $("#start").click(start);
-    $("reset").click(reset);
+    $("#reset").click(reset);
 
     $("#start").show();
     $("#timer").hide();
@@ -276,6 +276,71 @@ function outOfTime(){
     timerRunning = false;
 
     if (randArrIndex === 5){
+        $(".questionContainer").remove();
+
+        $("#start").hide();
+        $("#timer").hide();
+        $("#howto").hide();
+        $("#trivia").hide();
+        $("#correctAns").show().text("Correct: " + correct);
+        $("#incorrectAns").show().text("Incorrect: " + incorrect);
+        $("#unanswered").show().text("Unanswered: " + unanswered);
+        $("#reset").show();
+
+        
+    }
+    else if (noAnswer === true){
+
+        $("#start").hide();
+        $("#timer").hide();
+        $("#howto").hide();
+        $("#trivia").hide();
+        $("#correctAns").hide();
+        $("#incorrectAns").hide();
+        $("#unanswered").show().text("Whoops you ran out of time! The answer to that question is " + correctQAnsText);
+        $("#reset").hide();
+
+        randArrIndex++;
+        setTimeout(displayQ, 2000);
+    }
+    else {
+        displayQ();
+    }
+}
+
+function clicked(value){
+    randArrIndex++;
+    noAnswer = false;
+    
+    if (correctQAns === value){
+        $("#start").hide();
+        $("#timer").hide();
+        $("#howto").hide();
+        $("#trivia").hide();
+        $("#correctAns").show().text("You got it right!!");
+        $("#incorrectAns").hide();
+        $("#unanswered").hide();
+        $("#reset").hide();
+        correct++;
+        unanswered--;
+        setTimeout(displayQ, 2000);
+    }
+    
+    else {
+        $("#start").hide();
+        $("#timer").hide();
+        $("#howto").hide();
+        $("#trivia").hide();
+        $("#correctAns").hide();
+        $("#incorrectAns").show().text("Eep that's wrong! The correct answer is " + correctQAnsText);
+        $("#unanswered").hide();
+        $("#reset").hide();
+        incorrect++;
+        unanswered--;
+        setTimeout(displayQ, 2000);
+    }
+
+    if (randArrIndex === 5){
 
         $(".questionContainer").remove();
 
@@ -288,69 +353,17 @@ function outOfTime(){
         $("#unanswered").show().text("Unanswered: " + unanswered);
         $("#reset").show();
     }
-    else if (noAnswer === true){
-
-        $("#start").hide();
-        $("#timer").show();
-        $("#howto").hide();
-        $("#trivia").hide();
-        $("#correctAns").hide();
-        $("#incorrectAns").hide();
-        $("#unanswered").show().text("Whoops you ran out of time! The answer to that question is " + correctQAnsText);
-        $("#reset").hide();
-
-        time = 5;
-        startTimer();
-        randArrIndex++;
-    }
-    else {
-        displayQ();
-    }
-}
-
-function clicked(value){
-    randArrIndex++;
-    clearInterval(intervalId);
-    timerRunning = false;
-    time = 5;
-    startTimer();
-    noAnswer = false;
-    
-    if (correctQAns === value){
-        $("#start").hide();
-        $("#timer").show();
-        $("#howto").hide();
-        $("#trivia").hide();
-        $("#correctAns").show().text("You got it right!!");
-        $("#incorrectAns").hide();
-        $("#unanswered").hide();
-        $("#reset").hide();
-        correct++;
-        unanswered--;
-    }
-    else {
-        $("#start").hide();
-        $("#timer").show();
-        $("#howto").hide();
-        $("#trivia").hide();
-        $("#correctAns").hide();
-        $("#incorrectAns").show().text("Eep that's wrong! The correct answer is " + correctQAns);
-        $("#unanswered").hide();
-        $("#reset").hide();
-        incorrect++;
-        unanswered--;
-    }
-    displayQ();
 }
 
 function displayQ(){
     if (randArrIndex === 5){
-        outOfTime();
+        return outOfTime();
     }
 
     $(".questionContainer").remove();
     clearInterval(intervalId);
     time = 10;
+    timerRunning=false;
     startTimer();
 
     $("#start").hide();
@@ -403,7 +416,6 @@ randArrIndex = 0;
 
 //Used for the timer
 timerRunning = false;
-time;
 clearInterval(intervalId);
 
     $("#start").hide();
