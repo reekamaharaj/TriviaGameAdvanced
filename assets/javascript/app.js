@@ -192,9 +192,9 @@ $('document').ready(function(){
 
 //start 
 function start(){
+    clearInterval(intervalId);
     time = 10;
     timerStart();
-    decrement();
     randQ();
     
     $("#timer").show();
@@ -216,7 +216,6 @@ function randQ(){
         unanswered++;
 
     }
-    console.log(randArr);
     newQ();
     }
 
@@ -278,21 +277,19 @@ function decrement(){
     time--;
     $("#sec").text(time);
     if (time === 0) {
-        clearInterval(intervalId);
-        timerRunning = false;
         outOfTime();
     }
 }
 
 function outOfTime(){
-    time=5;
     clearInterval(intervalId);
     timerRunning = false;
+    results();
+    time=5;
     timerStart();
-    decrement
         $("#triviaAll").hide();
         $("#outOfTime").show().text("Whoops you ran out of time! The answer to that question is " + correctQAns);
-        nextQ();
+        newQ();
 }
 
 //game over
@@ -319,12 +316,14 @@ function clicked(currentAns, qIndex){
 
     answers[qIndexInt] = currentAnsObj;
     answerArray = Object.values(answers);
+    console.log(answerArray);
     results();
 }
 
 // results
 function results(){
     if (randArrIndex != 5){
+        console.log(answerArray);
 
         for (i=0; i < answerArray.length; i++){
             if (answerArray[i].correctAns === answerArray[i].radioAns){
@@ -337,7 +336,6 @@ function results(){
                 randArrIndex++;
                 $("#correctAns").show().text("You got it right!!");
                 timerStart();
-                decrement();
                 newQ();
             }
             else if (answerArray[i].radioAns === undefined){
@@ -348,7 +346,6 @@ function results(){
                 randArrIndex++;
                 $("#outOfTime").show().text("Eep thats wrong! The answer to that question is " + correctQAns);
                 timerStart();
-                decrement();
                 newQ();
             }
             else {
@@ -391,6 +388,7 @@ function reset(){
     answers = { };
     randArr = [ ];
     randArrIndex = 0;
+    time=0;
 
     clearInterval(intervalId);
     timerRunning = false;
