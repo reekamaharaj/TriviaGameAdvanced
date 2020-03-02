@@ -254,6 +254,7 @@ function randQ(){
 
 //will start the timer. Before called need to set the time, timerRunning to false and clear the intervalId
 function startTimer(){
+    $("#sec").text(time);
     if (!timerRunning) {
         intervalId = setInterval(decrement, 1000);
         timerRunning = true;
@@ -266,8 +267,8 @@ function decrement(){
     if (time === 0) {
         outOfTime();
     }
-    $("#sec").text(time);
     time--;
+    $("#sec").text(time);
 }
 
 function outOfTime(){
