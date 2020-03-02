@@ -192,7 +192,7 @@ let randArrIndex = 0;
 
 //Used for the timer
 let timerRunning = false;
-let time;
+let time = 10;
 let intervalId;
 
 /* 
@@ -226,8 +226,6 @@ $("document").ready(function(){
 //game starts when the start button is clicked
 
 function start(){
-    randQ();
-
     $("#start").hide();
     $("#timer").show();
     $("#howto").hide();
@@ -236,6 +234,8 @@ function start(){
     $("#incorrectAns").hide();
     $("#unanswered").hide();
     $("#reset").hide();
+
+    randQ();
 }
 
 //runs once after starting the game, will pick 5 random questions from the triviaQuestion array and put them into randArr 
@@ -255,7 +255,6 @@ function randQ(){
 //will start the timer. Before called need to set the time, timerRunning to false and clear the intervalId
 function startTimer(){
     if (!timerRunning) {
-        $("#timer").show();
         intervalId = setInterval(decrement, 1000);
         timerRunning = true;
     }
@@ -264,11 +263,11 @@ function startTimer(){
 //called when the timer starts, will reduce time by one until time is 0 and then it will run the outOfTime function
 
 function decrement(){
-    time--;
-    $("#sec").text(time);
     if (time === 0) {
         outOfTime();
     }
+    $("#sec").text(time);
+    time--;
 }
 
 function outOfTime(){
@@ -286,8 +285,6 @@ function outOfTime(){
         $("#incorrectAns").show().text("Incorrect: " + incorrect);
         $("#unanswered").show().text("Unanswered: " + unanswered);
         $("#reset").show();
-
-        
     }
     else if (noAnswer === true){
 
@@ -299,9 +296,9 @@ function outOfTime(){
         $("#incorrectAns").hide();
         $("#unanswered").show().text("Whoops you ran out of time! The answer to that question is " + correctQAnsText);
         $("#reset").hide();
-
         randArrIndex++;
-        setTimeout(displayQ, 2000);
+        clearInterval(intervalId);
+        setTimeout(displayQ, 1500);
     }
     else {
         displayQ();
@@ -323,7 +320,8 @@ function clicked(value){
         $("#reset").hide();
         correct++;
         unanswered--;
-        setTimeout(displayQ, 2000);
+        clearInterval(intervalId);
+        setTimeout(displayQ, 1500);
     }
     
     else {
@@ -337,7 +335,8 @@ function clicked(value){
         $("#reset").hide();
         incorrect++;
         unanswered--;
-        setTimeout(displayQ, 2000);
+        clearInterval(intervalId);
+        setTimeout(displayQ, 1500);
     }
 
     if (randArrIndex === 5){
@@ -356,6 +355,14 @@ function clicked(value){
 }
 
 function displayQ(){
+    $("#start").hide();
+    $("#timer").show();
+    $("#howto").hide();
+    $("#trivia").show();
+    $("#correctAns").hide();
+    $("#incorrectAns").hide();
+    $("#unanswered").hide();
+    $("#reset").hide();
     if (randArrIndex === 5){
         return outOfTime();
     }
@@ -365,15 +372,6 @@ function displayQ(){
     time = 10;
     timerRunning=false;
     startTimer();
-
-    $("#start").hide();
-    $("#timer").show();
-    $("#howto").hide();
-    $("#trivia").show();
-    $("#correctAns").hide();
-    $("#incorrectAns").hide();
-    $("#unanswered").hide();
-    $("#reset").hide();
 
     questionContainer = undefined;
     question = undefined;
@@ -405,19 +403,6 @@ function displayQ(){
 }
 
 function reset(){
-//Keep track of scores
-correct = 0;
-incorrect =0;
-unanswered = 5;
-
-//Used to check the current question data
-randArr = [ ];
-randArrIndex = 0;
-
-//Used for the timer
-timerRunning = false;
-clearInterval(intervalId);
-
     $("#start").hide();
     $("#timer").show();
     $("#howto").hide();
@@ -426,6 +411,19 @@ clearInterval(intervalId);
     $("#incorrectAns").hide();
     $("#unanswered").hide();
     $("#reset").hide();
+
+    //Keep track of scores
+    correct = 0;
+    incorrect =0;
+    unanswered = 5;
+
+    //Used to check the current question data
+    randArr = [ ];
+    randArrIndex = 0;
+
+    //Used for the timer
+    timerRunning = false;
+    clearInterval(intervalId);
 
     start();
 }
